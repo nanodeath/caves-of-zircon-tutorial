@@ -1,16 +1,18 @@
 package com.example.cavesofzircon.view
 
-import org.hexworks.zircon.api.ColorThemes
+import com.example.cavesofzircon.GameConfig
 import org.hexworks.zircon.api.ComponentDecorations.box
 import org.hexworks.zircon.api.Components
+import org.hexworks.zircon.api.component.ColorTheme
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.grid.TileGrid
 import org.hexworks.zircon.api.view.base.BaseView
 import kotlin.system.exitProcess
 
 class WinView(
-    private val grid: TileGrid
-) : BaseView(grid, ColorThemes.arc()) {
+    private val grid: TileGrid,
+    theme: ColorTheme = GameConfig.THEME
+) : BaseView(grid, theme) {
     init {
         val header = Components.header()
             .withText("You won!")
