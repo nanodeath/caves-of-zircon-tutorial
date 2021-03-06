@@ -6,11 +6,14 @@ import com.example.cavesofzircon.extensions.position
 import org.hexworks.amethyst.api.Engine
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
+import org.hexworks.amethyst.internal.TurnBasedEngine
 import org.hexworks.zircon.api.builder.game.GameAreaBuilder
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Size3D
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.game.GameArea
+import org.hexworks.zircon.api.screen.Screen
+import org.hexworks.zircon.api.uievent.UIEvent
 import kotlin.random.Random
 
 class World(
@@ -23,7 +26,7 @@ class World(
     .withActualSize(actualSize)
     .build() {
 
-    private val engine: Engine<GameContext> = Engine.create()
+    private val engine: TurnBasedEngine<GameContext> = Engine.create()
 
     init {
         for ((pos, block) in startingBlocks) {
@@ -64,6 +67,26 @@ class World(
                 fetchBlockAtOrNull(position)?.isEmptyFloor == true
             }
             ?: throw IllegalStateException("Failed after $maxTries attempts")
+    }
+
+    fun update(screen: Screen, uiEvent: UIEvent, game: Game) {
+        engine.executeTurn(GameContext(
+            world = this,
+            screen = screen,
+            uiEvent = uiEvent,
+            player = game.player
+        ))
+    }
+
+    fun moveEntity(entity: GameEntity<EntityType>, position: Position3D): Boolean {
+        val oldBlock = fetchBlockAtOrNull(entity.position)
+        val newBlock = fetchBlockAtOrNull(position)
+        return if (oldBlock != null && newBlock != null) {
+            oldBlock.removeEntity(entity)
+            entity.position = position
+            newBlock.addEntity(entity)
+            true
+        } else false
     }
 
     private fun randomInt(int: Int) = if (int == 0) 0 else random.nextInt(int)

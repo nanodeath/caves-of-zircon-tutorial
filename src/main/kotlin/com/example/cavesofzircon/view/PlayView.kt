@@ -11,6 +11,7 @@ import org.hexworks.zircon.api.component.ColorTheme
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.game.ProjectionMode
 import org.hexworks.zircon.api.grid.TileGrid
+import org.hexworks.zircon.api.uievent.*
 import org.hexworks.zircon.api.view.base.BaseView
 import org.hexworks.zircon.internal.game.impl.GameAreaComponentRenderer
 import kotlin.random.Random
@@ -46,5 +47,11 @@ class PlayView(
             .withAlignmentWithin(screen, ComponentAlignment.TOP_RIGHT)
             .build()
             .let { screen.addComponent(it) }
+
+        screen.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { event: KeyboardEvent, phase: UIEventPhase ->
+            game.world.update(screen, event, game)
+            Processed
+        }
     }
 }
+

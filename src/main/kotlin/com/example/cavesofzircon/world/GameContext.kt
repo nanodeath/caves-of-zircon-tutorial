@@ -4,7 +4,7 @@ import com.example.cavesofzircon.extensions.GameEntity
 import com.example.cavesofzircon.types.Player
 import org.hexworks.amethyst.api.Context
 import org.hexworks.zircon.api.screen.Screen
-import org.w3c.dom.events.UIEvent
+import org.hexworks.zircon.api.uievent.UIEvent
 
 data class GameContext(
     val world: World,
