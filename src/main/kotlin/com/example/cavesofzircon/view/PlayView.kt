@@ -1,6 +1,7 @@
 package com.example.cavesofzircon.view
 
 import com.example.cavesofzircon.GameConfig
+import com.example.cavesofzircon.builders.GameBuilder
 import com.example.cavesofzircon.builders.GameTileRepository
 import com.example.cavesofzircon.world.Game
 import org.hexworks.cobalt.databinding.api.extension.toProperty
@@ -12,10 +13,11 @@ import org.hexworks.zircon.api.game.ProjectionMode
 import org.hexworks.zircon.api.grid.TileGrid
 import org.hexworks.zircon.api.view.base.BaseView
 import org.hexworks.zircon.internal.game.impl.GameAreaComponentRenderer
+import kotlin.random.Random
 
 class PlayView(
     private val grid: TileGrid,
-    private val game: Game = Game.create(),
+    private val game: Game = GameBuilder.create(Random(0xDEADBEEF)),
     theme: ColorTheme = GameConfig.THEME
 ) : BaseView(grid, theme) {
     init {

@@ -14,7 +14,7 @@ class WorldBuilder(private val worldSize: Size3D, private val random: Random) {
 
     fun makeCaves() = randomizeTiles().smooth(8)
 
-    fun build(visibleSize: Size3D) = World(blocks, visibleSize, worldSize)
+    fun build(visibleSize: Size3D) = World(blocks, visibleSize, worldSize, random)
 
     private fun randomizeTiles(): WorldBuilder {
         forAllPositions { pos ->

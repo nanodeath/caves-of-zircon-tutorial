@@ -1,19 +1,15 @@
 package com.example.cavesofzircon.world
 
-import com.example.cavesofzircon.GameConfig
-import com.example.cavesofzircon.builders.WorldBuilder
-import org.hexworks.zircon.api.data.Size3D
-import kotlin.random.Random
+import com.example.cavesofzircon.extensions.GameEntity
+import com.example.cavesofzircon.types.Player
 
-class Game(val world: World) {
+class Game(val world: World, val player: GameEntity<Player>) {
     companion object {
         fun create(
-            worldSize: Size3D = GameConfig.WORLD_SIZE,
-            visibleSize: Size3D = GameConfig.GAME_AREA_SIZE
+            player: GameEntity<Player>,
+            world: World
         ) = Game(
-            WorldBuilder(worldSize, Random(0xDEADBEEF))
-                .makeCaves()
-                .build(visibleSize)
+            world, player
         )
     }
 }
