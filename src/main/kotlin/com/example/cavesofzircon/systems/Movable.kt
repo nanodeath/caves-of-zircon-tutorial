@@ -1,6 +1,7 @@
 package com.example.cavesofzircon.systems
 
 import com.example.cavesofzircon.extensions.position
+import com.example.cavesofzircon.extensions.tryActionsOn
 import com.example.cavesofzircon.messages.MoveCamera
 import com.example.cavesofzircon.messages.MoveTo
 import com.example.cavesofzircon.types.Player
@@ -16,16 +17,24 @@ object Movable : BaseFacet<GameContext, MoveTo>(MoveTo::class) {
         val (context, entity, position) = message
         val world = context.world
         val previousPosition = entity.position
-        return if (world.moveEntity(entity, position)) {
-            if (entity.type == Player) {
-                MessageResponse(MoveCamera(
-                    context, entity, previousPosition
-                ))
+
+        world.fetchBlockAtOrNull(position)?.let { block ->
+            block.occupier?.let { return entity.tryActionsOn(context, it) }
+
+            return if (world.moveEntity(entity, position)) {
+                if (entity.type == Player) {
+                    MessageResponse(
+                        MoveCamera(
+                            context, entity, previousPosition
+                        )
+                    )
+                } else {
+                    Consumed
+                }
             } else {
-                Consumed
+                Pass
             }
-        } else {
-            Pass
         }
+        return Pass
     }
 }

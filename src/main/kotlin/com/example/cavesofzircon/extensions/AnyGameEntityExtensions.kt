@@ -1,8 +1,14 @@
 package com.example.cavesofzircon.extensions
 
+import com.example.cavesofzircon.attributes.EntityActions
 import com.example.cavesofzircon.attributes.EntityPosition
 import com.example.cavesofzircon.attributes.EntityTile
+import com.example.cavesofzircon.flags.BlockOccupier
+import com.example.cavesofzircon.world.GameContext
 import org.hexworks.amethyst.api.Attribute
+import org.hexworks.amethyst.api.Consumed
+import org.hexworks.amethyst.api.Pass
+import org.hexworks.amethyst.api.Response
 import org.hexworks.zircon.api.data.Tile
 import kotlin.reflect.KClass
 
@@ -22,4 +28,17 @@ inline fun <reified T : Attribute> AnyGameEntity.requiredAttribute(): T
 fun <T : Attribute> AnyGameEntity.requiredAttribute(klass: KClass<T>): T {
     return findAttributeOrNull(klass)
         ?: throw NoSuchElementException("Entity '$this' has no property with type '${klass.simpleName}'.")
+}
+
+val AnyGameEntity.occupiesBlock get() = findAttributeOrNull(BlockOccupier::class) != null
+
+suspend fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity): Response {
+    findAttributeOrNull(EntityActions::class)?.let { ea ->
+        for (action in ea.createActionsFor(context, this, target)) {
+            if (target.receiveMessage(action) is Consumed) {
+                return Consumed
+            }
+        }
+    }
+    return Pass
 }

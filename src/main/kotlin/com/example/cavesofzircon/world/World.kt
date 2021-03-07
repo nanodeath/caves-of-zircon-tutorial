@@ -1,6 +1,7 @@
 package com.example.cavesofzircon.world
 
 import com.example.cavesofzircon.blocks.GameBlock
+import com.example.cavesofzircon.extensions.AnyGameEntity
 import com.example.cavesofzircon.extensions.GameEntity
 import com.example.cavesofzircon.extensions.position
 import org.hexworks.amethyst.api.Engine
@@ -87,6 +88,12 @@ class World(
             newBlock.addEntity(entity)
             true
         } else false
+    }
+
+    fun removeEntity(entity: AnyGameEntity) {
+        fetchBlockAtOrNull(entity.position)?.removeEntity(entity)
+        engine.removeEntity(entity)
+        entity.position = Position3D.unknown()
     }
 
     private fun randomInt(int: Int) = if (int == 0) 0 else random.nextInt(int)

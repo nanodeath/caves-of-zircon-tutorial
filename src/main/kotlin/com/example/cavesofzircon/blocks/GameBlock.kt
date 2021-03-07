@@ -4,7 +4,9 @@ import com.example.cavesofzircon.builders.GameTileRepository.EMPTY
 import com.example.cavesofzircon.builders.GameTileRepository.FLOOR
 import com.example.cavesofzircon.builders.GameTileRepository.PLAYER
 import com.example.cavesofzircon.builders.GameTileRepository.WALL
+import com.example.cavesofzircon.extensions.AnyGameEntity
 import com.example.cavesofzircon.extensions.GameEntity
+import com.example.cavesofzircon.extensions.occupiesBlock
 import com.example.cavesofzircon.extensions.tile
 import kotlinx.collections.immutable.persistentMapOf
 import org.hexworks.amethyst.api.entity.EntityType
@@ -19,11 +21,17 @@ class GameBlock(
     EMPTY,
     tiles = persistentMapOf(BlockTileType.CONTENT to defaultTile)
 ) {
+    init {
+        updateContent()
+    }
+
     val isFloor get() = content == FLOOR
     val isWall get() = content == WALL
 
     val isEmptyFloor get() = currentEntities.isEmpty()
     val entities: Iterable<GameEntity<EntityType>> = currentEntities
+    val occupier: AnyGameEntity? get() = currentEntities.firstOrNull { it.occupiesBlock }
+    val isOccupied get() = currentEntities.any { it.occupiesBlock }
 
     fun addEntity(entity: GameEntity<EntityType>) {
         currentEntities.add(entity)
@@ -42,5 +50,15 @@ class GameBlock(
             entityTiles.isNotEmpty() -> entityTiles.first()
             else -> defaultTile
         }
+    }
+
+    override fun toString(): String {
+        return "GameBlock(entities=$entities)"
+    }
+
+    companion object {
+        fun createWith(entity: AnyGameEntity) = GameBlock(
+            currentEntities = mutableListOf(entity)
+        )
     }
 }

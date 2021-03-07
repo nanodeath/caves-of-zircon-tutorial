@@ -33,7 +33,7 @@ class WorldBuilder(private val worldSize: Size3D, private val random: Random) {
                 var rocks = 0
                 pos.sameLevelNeighborsShuffled().plus(pos).forEach { neighbor ->
                     blocks[neighbor]?.let { block ->
-                        if (block.isFloor) {
+                        if (block.isEmptyFloor) {
                             floors++
                         } else {
                             rocks++
