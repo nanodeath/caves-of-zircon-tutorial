@@ -33,7 +33,7 @@ object EntityFactory {
             Vision(9)
         )
         behaviors(InputReceiver)
-        facets(Movable, CameraMover, StairClimber, StairDescender)
+        facets(Movable, CameraMover, StairClimber, StairDescender, Attackable, Destructible)
     }
 
     val fogOfWar = newGameEntityOfType(FogOfWarType) {
@@ -59,6 +59,21 @@ object EntityFactory {
         )
         behaviors(FungusGrowth)
         facets(Attackable, Destructible)
+    }
+
+    fun newBat() = newGameEntityOfType(Bat) {
+        attributes(
+            BlockOccupier,
+            EntityPosition(),
+            EntityTile(GameTileRepository.BAT),
+            CombatStats.create(
+                maxHp = 5,
+                attackValue = 2,
+                defenseValue = 1
+            )
+        )
+        behaviors(Wanderer)
+        facets(Movable, Attackable, Destructible)
     }
 
     fun newStairsDown() = newGameEntityOfType(StairsDown) {

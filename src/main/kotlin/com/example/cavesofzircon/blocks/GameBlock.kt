@@ -14,14 +14,15 @@ import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.BlockTileType
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BaseBlock
+import java.util.*
 
 class GameBlock(
-    private val defaultTile: Tile = FLOOR,
-    private val currentEntities: MutableList<GameEntity<EntityType>> = mutableListOf()
+    private val defaultTile: Tile = FLOOR
 ) : BaseBlock<Tile>(
     EMPTY,
     tiles = persistentMapOf(BlockTileType.CONTENT to defaultTile)
 ) {
+    private val currentEntities: MutableList<GameEntity<EntityType>> = Collections.synchronizedList(mutableListOf())
     init {
         updateContent()
     }
@@ -62,8 +63,9 @@ class GameBlock(
     }
 
     companion object {
-        fun createWith(entity: AnyGameEntity) = GameBlock(
-            currentEntities = mutableListOf(entity, EntityFactory.fogOfWar)
-        )
+        fun createWith(entity: AnyGameEntity) = GameBlock().also {
+            it.addEntity(entity)
+            it.addEntity(EntityFactory.fogOfWar)
+        }
     }
 }

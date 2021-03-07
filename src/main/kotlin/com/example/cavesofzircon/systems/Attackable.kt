@@ -23,7 +23,7 @@ object Attackable : BaseFacet<GameContext, Attack>(Attack::class) {
             logGameEvent("The $attacker hit the $target for $finalDamage", this)
 
             if (target.noHealthLeft) {
-                target.sendMessage(
+                target.receiveMessage(
                     Destroy(
                         context = context,
                         source = attacker,

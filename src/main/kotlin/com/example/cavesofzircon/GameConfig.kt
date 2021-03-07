@@ -10,6 +10,7 @@ object GameConfig {
     const val DUNGEON_LEVELS = 2
     const val FUNGI_PER_LEVEL = 15
     const val MAXIMUM_FUNGUS_SPREAD = 20
+    const val BATS_PER_LEVEL = 10
 
     // Look & Feel
     val TILESET = CP437TilesetResources.rogueYun16x16()

@@ -35,6 +35,13 @@ object GameTileRepository {
         .withBackgroundColor(GameColors.FLOOR_BACKGROUND)
         .buildCharacterTile()
 
+    val BAT = Tile.newBuilder()
+        .withName("BAT")
+        .withCharacter('b')
+        .withBackgroundColor(GameColors.FLOOR_BACKGROUND)
+        .withForegroundColor(GameColors.BAT_COLOR)
+        .buildCharacterTile()
+
     val STAIRS_UP = Tile.newBuilder()
         .withName("STAIRS_UP")
         .withCharacter('<')
