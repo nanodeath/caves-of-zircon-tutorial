@@ -21,7 +21,7 @@ class World(
     startingBlocks: Map<Position3D, GameBlock>,
     visibleSize: Size3D,
     actualSize: Size3D,
-    private val random: Random
+    val random: Random
 ) : GameArea<Tile, GameBlock> by GameAreaBuilder.newBuilder<Tile, GameBlock>()
     .withVisibleSize(visibleSize)
     .withActualSize(actualSize)
@@ -67,7 +67,6 @@ class World(
             .firstOrNull { position ->
                 fetchBlockAtOrNull(position)?.isEmptyFloor == true
             }
-            ?: throw IllegalStateException("Failed after $maxTries attempts")
     }
 
     fun update(screen: Screen, uiEvent: UIEvent, game: Game) {
