@@ -1,21 +1,21 @@
 package com.example.cavesofzircon.commands
 
-import com.example.cavesofzircon.extensions.AnyGameEntity
+import com.example.cavesofzircon.attributes.types.Combatant
+import com.example.cavesofzircon.extensions.GameEntity
 import com.example.cavesofzircon.messages.EntityAction
 import com.example.cavesofzircon.messages.EntityActionBuilder
 import com.example.cavesofzircon.world.GameContext
-import org.hexworks.amethyst.api.entity.EntityType
 
 data class Attack(
     override val context: GameContext,
-    override val source: AnyGameEntity,
-    override val target: AnyGameEntity
-) : EntityAction<EntityType, EntityType> {
-    companion object : EntityActionBuilder<EntityType, EntityType> {
+    override val source: GameEntity<Combatant>,
+    override val target: GameEntity<Combatant>
+) : EntityAction<Combatant, Combatant> {
+    companion object : EntityActionBuilder<Combatant, Combatant> {
         override fun create(
             context: GameContext,
-            source: AnyGameEntity,
-            target: AnyGameEntity
+            source: GameEntity<Combatant>,
+            target: GameEntity<Combatant>
         ) = Attack(context, source, target)
     }
 }

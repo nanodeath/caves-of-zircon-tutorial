@@ -25,7 +25,12 @@ object EntityFactory {
         attributes(
             EntityPosition(),
             EntityTile(PLAYER),
-            EntityActions(Dig, Attack)
+            EntityActions(Dig, Attack),
+            CombatStats.create(
+                maxHp = 100,
+                attackValue = 10,
+                defenseValue = 5
+            )
         )
         behaviors(InputReceiver)
         facets(Movable, CameraMover)
@@ -41,9 +46,14 @@ object EntityFactory {
             BlockOccupier,
             EntityPosition(),
             EntityTile(GameTileRepository.FUNGUS),
-            fungusSpread
+            fungusSpread,
+            CombatStats.create(
+                maxHp = 10,
+                attackValue = 0,
+                defenseValue = 0
+            )
         )
         behaviors(FungusGrowth)
-        facets(Attackable)
+        facets(Attackable, Destructible)
     }
 }

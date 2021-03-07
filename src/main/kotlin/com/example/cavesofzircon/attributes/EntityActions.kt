@@ -5,19 +5,19 @@ import com.example.cavesofzircon.messages.EntityAction
 import com.example.cavesofzircon.messages.EntityActionBuilder
 import com.example.cavesofzircon.world.GameContext
 import org.hexworks.amethyst.api.base.BaseAttribute
-import org.hexworks.amethyst.api.entity.EntityType
+import org.hexworks.amethyst.api.entity.Entity
 
-// TODO replace with companion objects w/ interfaces
 class EntityActions(
-    private vararg val actions: EntityActionBuilder<out EntityType, out EntityType>
+    private vararg val actions: EntityActionBuilder<*, *>
 ) : BaseAttribute() {
     fun createActionsFor(
         context: GameContext,
         source: AnyGameEntity,
         target: AnyGameEntity
-    ): Iterable<EntityAction<out EntityType, out EntityType>> {
+    ): Iterable<EntityAction<*, *>> {
         return actions.map { action ->
-            action.create(context, source, target)
+            // TODO see if I can fix these casts
+            action.create(context, source as Entity<Nothing, GameContext>, target as Entity<Nothing, GameContext>)
         }
     }
 }

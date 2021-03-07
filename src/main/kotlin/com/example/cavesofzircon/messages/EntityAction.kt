@@ -5,7 +5,7 @@ import com.example.cavesofzircon.extensions.GameMessage
 import com.example.cavesofzircon.world.GameContext
 import org.hexworks.amethyst.api.entity.EntityType
 
-interface EntityAction<S: EntityType, T: EntityType> : GameMessage {
+interface EntityAction<out S: EntityType, out T: EntityType> : GameMessage {
     val target: GameEntity<T>
 
     operator fun component1() = context
@@ -16,7 +16,7 @@ interface EntityAction<S: EntityType, T: EntityType> : GameMessage {
 interface EntityActionBuilder<S: EntityType, T: EntityType> {
     fun create(
         context: GameContext,
-        source: GameEntity<EntityType>,
-        target: GameEntity<EntityType>
+        source: GameEntity<S>,
+        target: GameEntity<T>
     ) : EntityAction<S, T>
 }
