@@ -1,11 +1,12 @@
 package com.example.cavesofzircon.builders
 
 import com.example.cavesofzircon.attributes.*
+import com.example.cavesofzircon.attributes.flags.BlockOccupier
+import com.example.cavesofzircon.attributes.flags.VisionBlocker
 import com.example.cavesofzircon.builders.GameTileRepository.PLAYER
 import com.example.cavesofzircon.commands.Attack
 import com.example.cavesofzircon.commands.Dig
 import com.example.cavesofzircon.extensions.GameEntity
-import com.example.cavesofzircon.flags.BlockOccupier
 import com.example.cavesofzircon.systems.*
 import com.example.cavesofzircon.types.*
 import com.example.cavesofzircon.world.GameContext
@@ -28,14 +29,19 @@ object EntityFactory {
                 maxHp = 100,
                 attackValue = 10,
                 defenseValue = 5
-            )
+            ),
+            Vision(9)
         )
         behaviors(InputReceiver)
         facets(Movable, CameraMover, StairClimber, StairDescender)
     }
 
+    val fogOfWar = newGameEntityOfType(FogOfWarType) {
+        attributes(EntityTile(GameTileRepository.UNREVEALED))
+    }
+
     fun newWall(): GameEntity<Wall> = newGameEntityOfType(Wall) {
-        attributes(EntityPosition(), BlockOccupier, EntityTile(GameTileRepository.WALL))
+        attributes(EntityPosition(), BlockOccupier, EntityTile(GameTileRepository.WALL), VisionBlocker)
         facets(Diggable)
     }
 

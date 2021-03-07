@@ -3,6 +3,7 @@ package com.example.cavesofzircon.builders
 import com.example.cavesofzircon.GameConfig
 import com.example.cavesofzircon.extensions.GameEntity
 import com.example.cavesofzircon.extensions.position
+import com.example.cavesofzircon.types.FogOfWar
 import com.example.cavesofzircon.types.Player
 import com.example.cavesofzircon.world.Game
 import org.hexworks.amethyst.api.entity.EntityType
@@ -28,7 +29,9 @@ class GameBuilder(val worldSize: Size3D, random: Random) {
         val player = addPlayer()
         addFungi()
         println("Adding player at ${player.position}")
-        return Game.create(player, world)
+        val game = Game.create(player, world)
+        world.addWorldEntity(FogOfWar(game))
+        return game
     }
 
     private fun prepareWorld() {

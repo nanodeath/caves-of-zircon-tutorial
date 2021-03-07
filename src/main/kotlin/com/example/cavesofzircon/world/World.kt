@@ -1,8 +1,10 @@
 package com.example.cavesofzircon.world
 
+import com.example.cavesofzircon.attributes.Vision
 import com.example.cavesofzircon.blocks.GameBlock
 import com.example.cavesofzircon.extensions.AnyGameEntity
 import com.example.cavesofzircon.extensions.GameEntity
+import com.example.cavesofzircon.extensions.blocksVision
 import com.example.cavesofzircon.extensions.position
 import kotlinx.coroutines.Job
 import org.hexworks.amethyst.api.Engine
@@ -10,11 +12,14 @@ import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.amethyst.internal.TurnBasedEngine
 import org.hexworks.zircon.api.builder.game.GameAreaBuilder
+import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.data.Position3D
 import org.hexworks.zircon.api.data.Size3D
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.game.GameArea
 import org.hexworks.zircon.api.screen.Screen
+import org.hexworks.zircon.api.shape.EllipseFactory
+import org.hexworks.zircon.api.shape.LineFactory
 import org.hexworks.zircon.api.uievent.UIEvent
 import kotlin.random.Random
 
@@ -55,6 +60,10 @@ class World(
         true
     } ?: false
 
+    fun addWorldEntity(entity: AnyGameEntity) {
+        engine.addEntity(entity)
+    }
+
     fun findEmptyLocationWithin(offset: Position3D, size: Size3D): Position3D? {
         val maxTries = 10
         return generateSequence {
@@ -71,12 +80,14 @@ class World(
     }
 
     fun update(screen: Screen, uiEvent: UIEvent, game: Game): Job {
-        return engine.executeTurn(GameContext(
-            world = this,
-            screen = screen,
-            uiEvent = uiEvent,
-            player = game.player
-        ))
+        return engine.executeTurn(
+            GameContext(
+                world = this,
+                screen = screen,
+                uiEvent = uiEvent,
+                player = game.player
+            )
+        )
     }
 
     fun moveEntity(entity: GameEntity<EntityType>, position: Position3D): Boolean {
@@ -96,5 +107,32 @@ class World(
         entity.position = Position3D.unknown()
     }
 
+    fun isVisionBlockedAt(pos: Position3D): Boolean =
+        fetchBlockAtOrNull(pos)?.entities?.any(AnyGameEntity::blocksVision) ?: false
+
+    fun findVisiblePositionsFor(entity: AnyGameEntity): Iterable<Position> {
+        val centerPos = entity.position.to2DPosition()
+        val visionRadius = entity.findAttributeOrNull(Vision::class)?.radius ?: return emptyList()
+        return EllipseFactory.buildEllipse(
+            fromPosition = centerPos,
+            toPosition = centerPos.withRelativeX(visionRadius).withRelativeY(visionRadius)
+        )
+            .positions
+            .flatMap { ringPos ->
+                // TODO make this more functional
+                val result = mutableListOf<Position>()
+                val iter = LineFactory.buildLine(centerPos, ringPos).iterator()
+                do {
+                    val next = iter.next()
+                    result.add(next)
+                } while (iter.hasNext() && !isVisionBlockedAt(Position3D.from2DPosition(next, entity.position.z)))
+                result
+            }
+    }
+
+    fun makeVisible(position: Position3D) {
+        val current = blocks[position] ?: return
+        current.reveal()
+    }
     private fun randomInt(int: Int) = if (int == 0) 0 else random.nextInt(int)
 }

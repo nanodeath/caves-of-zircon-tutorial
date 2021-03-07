@@ -1,9 +1,10 @@
 package com.example.cavesofzircon.blocks
 
+import com.example.cavesofzircon.builders.EntityFactory
 import com.example.cavesofzircon.builders.GameTileRepository.EMPTY
 import com.example.cavesofzircon.builders.GameTileRepository.FLOOR
 import com.example.cavesofzircon.builders.GameTileRepository.PLAYER
-import com.example.cavesofzircon.builders.GameTileRepository.WALL
+import com.example.cavesofzircon.builders.GameTileRepository.UNREVEALED
 import com.example.cavesofzircon.extensions.AnyGameEntity
 import com.example.cavesofzircon.extensions.GameEntity
 import com.example.cavesofzircon.extensions.occupiesBlock
@@ -25,10 +26,7 @@ class GameBlock(
         updateContent()
     }
 
-    val isFloor get() = content == FLOOR
-    val isWall get() = content == WALL
-
-    val isEmptyFloor get() = currentEntities.isEmpty()
+    val isEmptyFloor get() = currentEntities.isEmpty() || currentEntities.singleOrNull() == EntityFactory.fogOfWar
     val entities: Iterable<GameEntity<EntityType>> = currentEntities
     val occupier: AnyGameEntity? get() = currentEntities.firstOrNull { it.occupiesBlock }
     val isOccupied get() = currentEntities.any { it.occupiesBlock }
@@ -43,10 +41,17 @@ class GameBlock(
         updateContent()
     }
 
+    fun reveal() {
+        if (currentEntities.remove(EntityFactory.fogOfWar)) {
+            updateContent()
+        }
+    }
+
     private fun updateContent() {
-        val entityTiles = currentEntities.map { it.tile }
+        val entityTiles: List<Tile> = currentEntities.map { it.tile }
         content = when {
-            entityTiles.contains(PLAYER) -> PLAYER
+            PLAYER in entityTiles -> PLAYER
+            EntityFactory.fogOfWar in currentEntities -> UNREVEALED
             entityTiles.isNotEmpty() -> entityTiles.first()
             else -> defaultTile
         }
@@ -58,7 +63,7 @@ class GameBlock(
 
     companion object {
         fun createWith(entity: AnyGameEntity) = GameBlock(
-            currentEntities = mutableListOf(entity)
+            currentEntities = mutableListOf(entity, EntityFactory.fogOfWar)
         )
     }
 }

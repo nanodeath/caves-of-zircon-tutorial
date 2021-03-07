@@ -7,3 +7,4 @@ object Wall : BaseEntityType("wall")
 object Fungus : BaseEntityType("fungus"), Combatant
 object StairsDown : BaseEntityType("stairs down")
 object StairsUp : BaseEntityType("stairs up")
+object FogOfWarType : BaseEntityType("fog of war")

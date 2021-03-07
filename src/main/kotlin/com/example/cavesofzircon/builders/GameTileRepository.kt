@@ -1,10 +1,11 @@
 package com.example.cavesofzircon.builders
 
+import org.hexworks.zircon.api.data.StackedTile
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.graphics.Symbols
 
 object GameTileRepository {
-    val EMPTY = Tile.empty()
+    val EMPTY = StackedTile.create(Tile.empty())
 
     val FLOOR = Tile.newBuilder()
         .withName("FLOOR")
@@ -46,5 +47,11 @@ object GameTileRepository {
         .withCharacter('>')
         .withForegroundColor(GameColors.ACCENT_COLOR)
         .withBackgroundColor(GameColors.FLOOR_BACKGROUND)
+        .buildCharacterTile()
+
+    val UNREVEALED = Tile.newBuilder()
+        .withName("UNREVEALED")
+        .withCharacter(' ')
+        .withBackgroundColor(GameColors.UNREVEALED_COLOR)
         .buildCharacterTile()
 }

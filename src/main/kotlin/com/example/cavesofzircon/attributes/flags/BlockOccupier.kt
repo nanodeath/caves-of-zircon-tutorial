@@ -1,4 +1,4 @@
-package com.example.cavesofzircon.flags
+package com.example.cavesofzircon.attributes.flags
 
 import org.hexworks.amethyst.api.base.BaseAttribute
 
