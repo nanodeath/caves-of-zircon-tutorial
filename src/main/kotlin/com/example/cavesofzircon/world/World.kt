@@ -4,6 +4,7 @@ import com.example.cavesofzircon.blocks.GameBlock
 import com.example.cavesofzircon.extensions.AnyGameEntity
 import com.example.cavesofzircon.extensions.GameEntity
 import com.example.cavesofzircon.extensions.position
+import kotlinx.coroutines.Job
 import org.hexworks.amethyst.api.Engine
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
@@ -69,8 +70,8 @@ class World(
             }
     }
 
-    fun update(screen: Screen, uiEvent: UIEvent, game: Game) {
-        engine.executeTurn(GameContext(
+    fun update(screen: Screen, uiEvent: UIEvent, game: Game): Job {
+        return engine.executeTurn(GameContext(
             world = this,
             screen = screen,
             uiEvent = uiEvent,

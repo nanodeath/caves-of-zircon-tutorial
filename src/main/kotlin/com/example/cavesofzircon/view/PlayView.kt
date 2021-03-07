@@ -14,13 +14,11 @@ import org.hexworks.zircon.api.component.ColorTheme
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.game.ProjectionMode
 import org.hexworks.zircon.api.grid.TileGrid
-import org.hexworks.zircon.api.uievent.KeyboardEvent
-import org.hexworks.zircon.api.uievent.KeyboardEventType
-import org.hexworks.zircon.api.uievent.Processed
-import org.hexworks.zircon.api.uievent.UIEventPhase
+import org.hexworks.zircon.api.uievent.*
 import org.hexworks.zircon.api.view.base.BaseView
 import org.hexworks.zircon.internal.Zircon
 import org.hexworks.zircon.internal.game.impl.GameAreaComponentRenderer
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.random.Random
 
 class PlayView(
@@ -61,9 +59,14 @@ class PlayView(
             .build()
             .let { screen.addComponent(it) }
 
+        val currentlyUpdating = AtomicBoolean(false)
         screen.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { event: KeyboardEvent, phase: UIEventPhase ->
-            game.world.update(screen, event, game)
-            Processed
+            if (currentlyUpdating.compareAndSet(false, true)) {
+                game.world.update(screen, event, game).invokeOnCompletion { currentlyUpdating.set(false) }
+                Processed
+            } else {
+                PreventDefault
+            }
         }
     }
 }
