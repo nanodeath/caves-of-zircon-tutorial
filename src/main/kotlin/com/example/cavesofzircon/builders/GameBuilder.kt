@@ -20,6 +20,7 @@ class GameBuilder(val worldSize: Size3D, random: Random) {
 
     val world = WorldBuilder(worldSize, random)
         .makeCaves()
+        .connectLevels()
         .build(visibleSize)
 
     fun buildGame(): Game {

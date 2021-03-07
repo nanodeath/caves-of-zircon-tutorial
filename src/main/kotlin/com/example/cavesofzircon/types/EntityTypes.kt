@@ -5,3 +5,5 @@ import org.hexworks.amethyst.api.base.BaseEntityType
 
 object Wall : BaseEntityType("wall")
 object Fungus : BaseEntityType("fungus"), Combatant
+object StairsDown : BaseEntityType("stairs down")
+object StairsUp : BaseEntityType("stairs up")
