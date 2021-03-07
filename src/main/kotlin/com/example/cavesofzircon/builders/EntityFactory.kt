@@ -11,6 +11,7 @@ import com.example.cavesofzircon.systems.CameraMover
 import com.example.cavesofzircon.systems.Diggable
 import com.example.cavesofzircon.systems.InputReceiver
 import com.example.cavesofzircon.systems.Movable
+import com.example.cavesofzircon.types.Fungus
 import com.example.cavesofzircon.types.Player
 import com.example.cavesofzircon.types.Wall
 import com.example.cavesofzircon.world.GameContext
@@ -37,5 +38,11 @@ object EntityFactory {
     fun newWall(): GameEntity<Wall> = newGameEntityOfType(Wall) {
         attributes(EntityPosition(), BlockOccupier, EntityTile(GameTileRepository.WALL))
         facets(Diggable)
+    }
+
+    fun newFungus() = newGameEntityOfType(Fungus) {
+        attributes(BlockOccupier, EntityPosition(), EntityTile(GameTileRepository.FUNGUS))
+        behaviors()
+        facets()
     }
 }

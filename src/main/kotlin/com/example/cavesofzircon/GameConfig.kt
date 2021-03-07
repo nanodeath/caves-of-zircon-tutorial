@@ -8,6 +8,7 @@ import org.hexworks.zircon.api.data.Size3D
 object GameConfig {
     // Game
     const val DUNGEON_LEVELS = 2
+    const val FUNGI_PER_LEVEL = 15
 
     // Look & Feel
     val TILESET = CP437TilesetResources.rogueYun16x16()

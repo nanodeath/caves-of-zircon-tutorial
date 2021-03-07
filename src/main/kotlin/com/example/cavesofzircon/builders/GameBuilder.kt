@@ -5,7 +5,9 @@ import com.example.cavesofzircon.extensions.GameEntity
 import com.example.cavesofzircon.extensions.position
 import com.example.cavesofzircon.types.Player
 import com.example.cavesofzircon.world.Game
+import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.Position3D
+import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.data.Size3D
 import kotlin.random.Random
 
@@ -23,6 +25,7 @@ class GameBuilder(val worldSize: Size3D, random: Random) {
     fun buildGame(): Game {
         prepareWorld()
         val player = addPlayer()
+        addFungi()
         println("Adding player at ${player.position}")
         return Game.create(player, world)
     }
@@ -32,13 +35,29 @@ class GameBuilder(val worldSize: Size3D, random: Random) {
     }
 
     private fun addPlayer(): GameEntity<Player> {
-        val player = EntityFactory.newPlayer()
-        world.addAtEmptyPosition(
-            player,
-            offset = Position3D.create(0, 0, GameConfig.DUNGEON_LEVELS - 1),
-            size = world.visibleSize.copy(zLength = 0)
+        return EntityFactory.newPlayer().addToWorld(
+            atLevel = GameConfig.DUNGEON_LEVELS - 1,
+            atArea = world.visibleSize.to2DSize()
         )
-        return player
+    }
+
+    private fun addFungi() {
+        repeat(world.actualSize.zLength) { level ->
+            repeat(GameConfig.FUNGI_PER_LEVEL) {
+                EntityFactory.newFungus().addToWorld(atLevel = level)
+            }
+        }
+    }
+
+    private fun <T : EntityType> GameEntity<T>.addToWorld(
+        atLevel: Int,
+        atArea: Size = world.actualSize.to2DSize()
+    ) : GameEntity<T> {
+        world.addAtEmptyPosition(this,
+            offset = Position3D.defaultPosition().withZ(atLevel),
+            size = Size3D.from2DSize(atArea)
+        )
+        return this
     }
 
     companion object {
