@@ -2,6 +2,7 @@ package com.example.cavesofzircon.messages
 
 import com.example.cavesofzircon.extensions.GameEntity
 import com.example.cavesofzircon.extensions.GameMessage
+import com.example.cavesofzircon.world.GameContext
 import org.hexworks.amethyst.api.entity.EntityType
 
 interface EntityAction<S: EntityType, T: EntityType> : GameMessage {
@@ -10,4 +11,12 @@ interface EntityAction<S: EntityType, T: EntityType> : GameMessage {
     operator fun component1() = context
     operator fun component2() = source
     operator fun component3() = target
+}
+
+interface EntityActionBuilder<S: EntityType, T: EntityType> {
+    fun create(
+        context: GameContext,
+        source: GameEntity<EntityType>,
+        target: GameEntity<EntityType>
+    ) : EntityAction<S, T>
 }

@@ -28,7 +28,7 @@ object EntityFactory {
         attributes(
             EntityPosition(),
             EntityTile(PLAYER),
-            EntityActions(Dig::class)
+            EntityActions(Dig)
         )
         behaviors(InputReceiver)
         facets(Movable, CameraMover)
