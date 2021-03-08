@@ -55,8 +55,11 @@ val GameEntity<Combatant>.noHealthLeft get() = combatStats.hp <= 0
 
 val AnyGameEntity.blocksVision get() = findAttributeOrNull(VisionBlocker::class) != null
 
-inline fun <reified T : EntityType> Iterable<AnyGameEntity>.filterType(): List<Entity<T, GameContext>> {
-//    filter { it.type is T }.filterIsInstance<Entity<T, GameContext>>()
-    @Suppress("UNCHECKED_CAST")
-    return filter { it.type is T } as List<Entity<T, GameContext>>
-}
+inline fun <reified T : EntityType> Iterable<AnyGameEntity>.filterType(): List<Entity<T, GameContext>> =
+    asSequence().filterType<T>().toList()
+
+inline fun <reified T : EntityType> Sequence<AnyGameEntity>.filterType(): Sequence<Entity<T, GameContext>> =
+    filter { it.type is T }.filterIsInstance<Entity<T, GameContext>>()
+
+inline fun <reified T: EntityType> AnyGameEntity.takeIfType(): GameEntity<T>? =
+    sequenceOf(this).filterType<T>().firstOrNull()

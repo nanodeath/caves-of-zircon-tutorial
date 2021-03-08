@@ -10,7 +10,7 @@ import org.hexworks.amethyst.api.base.BaseBehavior
 object Wanderer : BaseBehavior<GameContext>() {
     override suspend fun update(entity: AnyGameEntity, context: GameContext): Boolean {
         val pos = entity.position
-        if (!pos.isUnknown) {
+        if (!pos.isUnknown && context.world.random.nextBoolean()) {
             entity.receiveMessage(MoveTo(context, entity, pos.sameLevelNeighborsShuffled().first()))
             return true
         }

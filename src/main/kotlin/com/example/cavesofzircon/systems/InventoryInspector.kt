@@ -1,8 +1,12 @@
 package com.example.cavesofzircon.systems
 
 import com.example.cavesofzircon.GameConfig
+import com.example.cavesofzircon.attributes.types.EnergyUser
+import com.example.cavesofzircon.attributes.types.Food
 import com.example.cavesofzircon.commands.DropItem
+import com.example.cavesofzircon.commands.Eat
 import com.example.cavesofzircon.commands.InspectInventory
+import com.example.cavesofzircon.extensions.takeIfType
 import com.example.cavesofzircon.types.inventory
 import com.example.cavesofzircon.view.fragment.InventoryFragment
 import com.example.cavesofzircon.world.GameContext
@@ -31,11 +35,19 @@ object InventoryInspector : BaseFacet<GameContext, InspectInventory>(InspectInve
             .withAlignmentWithin(context.screen, ComponentAlignment.CENTER)
             .build()
 
-        val fragment = InventoryFragment(itemHolder.inventory, DIALOG_SIZE.width - 3) { item ->
+        val fragment = InventoryFragment(itemHolder.inventory, DIALOG_SIZE.width - 3, onDrop = { item ->
             runBlocking {
                 itemHolder.receiveMessage(DropItem(context, itemHolder, item))
             }
-        }
+        }, onEat = { item ->
+            runBlocking {
+                itemHolder.takeIfType<EnergyUser>()?.let { eater ->
+                    item.takeIfType<Food>()?.let { food ->
+                        itemHolder.receiveMessage(Eat(context, eater, food))
+                    }
+                }
+            }
+        })
         panel.addFragment(fragment)
 
         val modal = ModalBuilder.newBuilder<EmptyModalResult>()

@@ -33,10 +33,23 @@ object EntityFactory {
                 defenseValue = 5
             ),
             Vision(9),
-            Inventory(10)
+            Inventory(10),
+            EnergyLevel(1000, 1000)
         )
-        behaviors(InputReceiver)
-        facets(Movable, CameraMover, StairClimber, StairDescender, Attackable, Destructible, ItemPicker, InventoryInspector, ItemDropper)
+        behaviors(InputReceiver, EnergyExpender)
+        facets(
+            Movable,
+            CameraMover,
+            StairClimber,
+            StairDescender,
+            Attackable,
+            Destructible,
+            ItemPicker,
+            InventoryInspector,
+            ItemDropper,
+            EnergyExpender,
+            DigestiveSystem
+        )
     }
 
     val fogOfWar = newGameEntityOfType(FogOfWarType) {
@@ -73,10 +86,14 @@ object EntityFactory {
                 maxHp = 5,
                 attackValue = 2,
                 defenseValue = 1
-            )
+            ),
+            EntityActions(Attack),
+            Inventory(1).apply {
+                addItem(newBatMeat())
+            }
         )
         behaviors(Wanderer)
-        facets(Movable, Attackable, Destructible)
+        facets(Movable, Attackable, ItemDropper, LootDropper, Destructible)
     }
 
     fun newStairsDown() = newGameEntityOfType(StairsDown) {
@@ -89,12 +106,29 @@ object EntityFactory {
 
     fun newZircon() = newGameEntityOfType(Zircon) {
         attributes(
-            ItemIcon(Tile.newBuilder()
-                .withName("white gem")
-                .withTileset(GraphicalTilesetResources.nethack16x16())
-                .buildGraphicalTile()),
+            ItemIcon(
+                Tile.newBuilder()
+                    .withName("white gem")
+                    .withTileset(GraphicalTilesetResources.nethack16x16())
+                    .buildGraphicalTile()
+            ),
             EntityPosition(),
             EntityTile(GameTileRepository.ZIRCON)
         )
+    }
+
+    fun newBatMeat() = newGameEntityOfType(BatMeat) {
+        attributes(
+            ItemIcon(
+                Tile.newBuilder()
+                    .withName("Meatball")
+                    .withTileset(GraphicalTilesetResources.nethack16x16())
+                    .buildGraphicalTile()
+            ),
+            NutritionalValue(750),
+            EntityPosition(),
+            EntityTile(GameTileRepository.BAT_MEAT)
+        )
+
     }
 }
