@@ -14,7 +14,7 @@ object LootDropper : BaseFacet<GameContext, Destroy>(Destroy::class) {
     override suspend fun receive(message: Destroy): Response {
         val (context, _, target) = message
         target.takeIfType<ItemHolder>()?.let { entity ->
-            for (item in entity.inventory.items) {
+            for (item in entity.inventory.items.toList()) {
                 entity.receiveMessage(DropItem(context, entity, item))
             }
         }
