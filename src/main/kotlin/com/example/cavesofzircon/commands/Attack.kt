@@ -15,7 +15,7 @@ data class Attack(
         override fun create(
             context: GameContext,
             source: GameEntity<Combatant>,
-            target: GameEntity<Combatant>
-        ) = Attack(context, source, target)
+            target: GameEntity<Combatant>?
+        ) = Attack(context, source, target!!)
     }
 }

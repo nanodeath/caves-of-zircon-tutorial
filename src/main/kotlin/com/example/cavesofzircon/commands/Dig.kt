@@ -15,8 +15,7 @@ data class Dig(
         override fun create(
             context: GameContext,
             source: AnyGameEntity,
-            target: AnyGameEntity
-        ) = Dig(context, source, target)
+            target: AnyGameEntity?
+        ) = Dig(context, source, target!!)
     }
 }
-

@@ -29,6 +29,7 @@ class GameBuilder(val worldSize: Size3D, random: Random) {
         val player = addPlayer()
         addFungi()
         addBats()
+        addZircons()
         println("Adding player at ${player.position}")
         val game = Game.create(player, world)
         world.addWorldEntity(FogOfWar(game))
@@ -58,6 +59,14 @@ class GameBuilder(val worldSize: Size3D, random: Random) {
         repeat(world.actualSize.zLength) { level ->
             repeat(GameConfig.BATS_PER_LEVEL) {
                 EntityFactory.newBat().addToWorld(atLevel = level)
+            }
+        }
+    }
+
+    private fun addZircons() {
+        repeat(world.actualSize.zLength) { level ->
+            repeat(GameConfig.ZIRCONS_PER_LEVEL) {
+                EntityFactory.newZircon().addToWorld(atLevel = level)
             }
         }
     }

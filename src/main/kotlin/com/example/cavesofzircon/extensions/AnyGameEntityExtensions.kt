@@ -13,6 +13,8 @@ import org.hexworks.amethyst.api.Attribute
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Pass
 import org.hexworks.amethyst.api.Response
+import org.hexworks.amethyst.api.entity.Entity
+import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.Tile
 import kotlin.reflect.KClass
 
@@ -52,3 +54,9 @@ val AnyGameEntity.isPlayer get() = type == Player
 val GameEntity<Combatant>.noHealthLeft get() = combatStats.hp <= 0
 
 val AnyGameEntity.blocksVision get() = findAttributeOrNull(VisionBlocker::class) != null
+
+inline fun <reified T : EntityType> Iterable<AnyGameEntity>.filterType(): List<Entity<T, GameContext>> {
+//    filter { it.type is T }.filterIsInstance<Entity<T, GameContext>>()
+    @Suppress("UNCHECKED_CAST")
+    return filter { it.type is T } as List<Entity<T, GameContext>>
+}

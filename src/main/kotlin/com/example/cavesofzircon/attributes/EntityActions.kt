@@ -17,7 +17,7 @@ class EntityActions(
     ): Iterable<EntityAction<*, *>> {
         return actions.map { action ->
             // TODO see if I can fix these casts
-            action.create(context, source as Entity<Nothing, GameContext>, target as Entity<Nothing, GameContext>)
+            action.create(context, source as Entity<Nothing, GameContext>, target as Entity<Nothing, GameContext>?)
         }
     }
 }
