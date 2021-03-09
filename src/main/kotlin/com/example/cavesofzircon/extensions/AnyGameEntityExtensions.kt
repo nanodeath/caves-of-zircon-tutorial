@@ -1,8 +1,6 @@
 package com.example.cavesofzircon.extensions
 
-import com.example.cavesofzircon.attributes.EntityActions
-import com.example.cavesofzircon.attributes.EntityPosition
-import com.example.cavesofzircon.attributes.EntityTile
+import com.example.cavesofzircon.attributes.*
 import com.example.cavesofzircon.attributes.flags.BlockOccupier
 import com.example.cavesofzircon.attributes.flags.VisionBlocker
 import com.example.cavesofzircon.attributes.types.Combatant
@@ -36,6 +34,8 @@ fun <T : Attribute> AnyGameEntity.requiredAttribute(klass: KClass<T>): T {
         ?: throw NoSuchElementException("Entity '$this' has no property with type '${klass.simpleName}'.")
 }
 
+inline fun <reified T : Attribute> AnyGameEntity.optionalAttribute(): T? = findAttributeOrNull(T::class)
+
 val AnyGameEntity.occupiesBlock get() = findAttributeOrNull(BlockOccupier::class) != null
 
 suspend fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity): Response {
@@ -63,3 +63,19 @@ inline fun <reified T : EntityType> Sequence<AnyGameEntity>.filterType(): Sequen
 
 inline fun <reified T: EntityType> AnyGameEntity.takeIfType(): GameEntity<T>? =
     sequenceOf(this).filterType<T>().firstOrNull()
+
+val AnyGameEntity.attackValue: Int
+    get() {
+        val combat = optionalAttribute<CombatStats>()?.attackValue ?: 0
+        val equipment = optionalAttribute<Equipment>()?.attackValue ?: 0
+        val item = optionalAttribute<ItemCombatStats>()?.attackValue ?: 0
+        return combat + equipment + item
+    }
+
+val AnyGameEntity.defenseValue: Int
+    get() {
+        val combat = optionalAttribute<CombatStats>()?.defenseValue ?: 0
+        val equipment = optionalAttribute<Equipment>()?.defenseValue ?: 0
+        val item = optionalAttribute<ItemCombatStats>()?.defenseValue ?: 0
+        return combat + equipment + item
+    }

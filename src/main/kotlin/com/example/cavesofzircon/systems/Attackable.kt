@@ -4,6 +4,8 @@ import com.example.cavesofzircon.attributes.types.combatStats
 import com.example.cavesofzircon.commands.Attack
 import com.example.cavesofzircon.commands.Destroy
 import com.example.cavesofzircon.events.logGameEvent
+import com.example.cavesofzircon.extensions.attackValue
+import com.example.cavesofzircon.extensions.defenseValue
 import com.example.cavesofzircon.extensions.isPlayer
 import com.example.cavesofzircon.extensions.noHealthLeft
 import com.example.cavesofzircon.world.GameContext
@@ -17,7 +19,7 @@ object Attackable : BaseFacet<GameContext, Attack>(Attack::class) {
     override suspend fun receive(message: Attack): Response {
         val (context, attacker, target) = message
         return if (attacker.isPlayer || target.isPlayer) {
-            val damage = max(1, attacker.combatStats.attackValue - target.combatStats.defenseValue)
+            val damage = max(1, attacker.attackValue - target.defenseValue)
             val finalDamage = (context.world.random.nextFloat() * damage).toInt() + 1
             target.combatStats.hp -= finalDamage
             logGameEvent("The $attacker hit the $target for $finalDamage", this)
