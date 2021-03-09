@@ -1,6 +1,8 @@
 package com.example.cavesofzircon.builders
 
 import com.example.cavesofzircon.GameConfig
+import com.example.cavesofzircon.GameConfig.ARMOR_PER_LEVEL
+import com.example.cavesofzircon.GameConfig.WEAPONS_PER_LEVEL
 import com.example.cavesofzircon.extensions.GameEntity
 import com.example.cavesofzircon.extensions.position
 import com.example.cavesofzircon.types.FogOfWar
@@ -12,7 +14,7 @@ import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.data.Size3D
 import kotlin.random.Random
 
-class GameBuilder(val worldSize: Size3D, random: Random) {
+class GameBuilder(val worldSize: Size3D, private val random: Random) {
     private val visibleSize = Size3D.create(
         xLength = GameConfig.WINDOW_WIDTH - GameConfig.SIDEBAR_WIDTH,
         yLength = GameConfig.WINDOW_HEIGHT - GameConfig.LOG_AREA_HEIGHT,
@@ -30,6 +32,8 @@ class GameBuilder(val worldSize: Size3D, random: Random) {
         addFungi()
         addBats()
         addZircons()
+        addWeapons()
+        addArmor()
         println("Adding player at ${player.position}")
         val game = Game.create(player, world)
         world.addWorldEntity(FogOfWar(game))
@@ -67,6 +71,22 @@ class GameBuilder(val worldSize: Size3D, random: Random) {
         repeat(world.actualSize.zLength) { level ->
             repeat(GameConfig.ZIRCONS_PER_LEVEL) {
                 EntityFactory.newZircon().addToWorld(atLevel = level)
+            }
+        }
+    }
+
+    private fun addWeapons() = also {
+        repeat(world.actualSize.zLength) { level ->
+            repeat(WEAPONS_PER_LEVEL) {
+                EntityFactory.newRandomWeapon(random).addToWorld(level)
+            }
+        }
+    }
+
+    private fun addArmor() = also {
+        repeat(world.actualSize.zLength) { level ->
+            repeat(ARMOR_PER_LEVEL) {
+                EntityFactory.newRandomArmor(random).addToWorld(level)
             }
         }
     }

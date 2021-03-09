@@ -1,12 +1,15 @@
 package com.example.cavesofzircon.systems
 
 import com.example.cavesofzircon.GameConfig
+import com.example.cavesofzircon.attributes.types.CombatItem
 import com.example.cavesofzircon.attributes.types.EnergyUser
 import com.example.cavesofzircon.attributes.types.Food
 import com.example.cavesofzircon.commands.DropItem
 import com.example.cavesofzircon.commands.Eat
 import com.example.cavesofzircon.commands.InspectInventory
 import com.example.cavesofzircon.extensions.takeIfType
+import com.example.cavesofzircon.types.EquipmentHolder
+import com.example.cavesofzircon.types.equip
 import com.example.cavesofzircon.types.inventory
 import com.example.cavesofzircon.view.fragment.InventoryFragment
 import com.example.cavesofzircon.world.GameContext
@@ -47,6 +50,13 @@ object InventoryInspector : BaseFacet<GameContext, InspectInventory>(InspectInve
                     }
                 }
             }
+        }, onEquip = { item ->
+            runBlocking {
+                val equipmentHolder = itemHolder.takeIfType<EquipmentHolder>()
+                val combatItem = item.takeIfType<CombatItem>()
+                if (equipmentHolder != null && combatItem != null) equipmentHolder.equip(itemHolder.inventory, combatItem) else null
+            }
+
         })
         panel.addFragment(fragment)
 

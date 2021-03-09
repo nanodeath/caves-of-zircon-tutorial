@@ -3,6 +3,8 @@ package com.example.cavesofzircon.builders
 import com.example.cavesofzircon.attributes.*
 import com.example.cavesofzircon.attributes.flags.BlockOccupier
 import com.example.cavesofzircon.attributes.flags.VisionBlocker
+import com.example.cavesofzircon.attributes.types.Armor
+import com.example.cavesofzircon.attributes.types.Weapon
 import com.example.cavesofzircon.builders.GameTileRepository.PLAYER
 import com.example.cavesofzircon.commands.Attack
 import com.example.cavesofzircon.commands.Dig
@@ -15,6 +17,7 @@ import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.amethyst.api.newEntityOfType
 import org.hexworks.zircon.api.GraphicalTilesetResources
 import org.hexworks.zircon.api.data.Tile
+import kotlin.random.Random
 import org.hexworks.zircon.api.data.Tile as Tiles
 
 fun <T : EntityType> newGameEntityOfType(
@@ -263,4 +266,13 @@ object EntityFactory {
             )
         )
     }
+
+    fun newRandomWeapon(r: Random): GameEntity<Weapon> = when (r.nextInt(3)) {
+        0 -> newDagger()
+        1 -> newSword()
+        else -> newStaff()
+    }
+
+    fun newRandomArmor(r: Random): GameEntity<Armor> =
+        listOf(::newLightArmor, ::newMediumArmor, ::newHeavyArmor).random(r)()
 }
