@@ -275,4 +275,25 @@ object EntityFactory {
 
     fun newRandomArmor(r: Random): GameEntity<Armor> =
         listOf(::newLightArmor, ::newMediumArmor, ::newHeavyArmor).random(r)()
+
+    fun newZombie(r: Random) = newGameEntityOfType(Zombie) {
+        attributes(
+            BlockOccupier,
+            EntityPosition(),
+            EntityTile(GameTileRepository.ZOMBIE),
+            Vision(10),
+            CombatStats.create(
+                maxHp = 25,
+                attackValue = 8,
+                defenseValue = 4
+            ),
+            Inventory(2).apply {
+                addItem(newRandomWeapon(r))
+                addItem(newRandomArmor(r))
+            },
+            EntityActions(Attack)
+        )
+        facets(Movable, Attackable, ItemDropper, LootDropper, Destructible)
+        behaviors(HunterSeeker or Wanderer)
+    }
 }

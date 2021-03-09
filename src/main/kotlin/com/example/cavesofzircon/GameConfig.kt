@@ -12,8 +12,9 @@ object GameConfig {
     const val MAXIMUM_FUNGUS_SPREAD = 20
     const val BATS_PER_LEVEL = 10
     const val ZIRCONS_PER_LEVEL = 20
-    const val WEAPONS_PER_LEVEL = 3
-    const val ARMOR_PER_LEVEL = 3
+    const val WEAPONS_PER_LEVEL = 1
+    const val ARMOR_PER_LEVEL = 1
+    const val ZOMBIES_PER_LEVEL = 30
 
     // Look & Feel
     val TILESET = CP437TilesetResources.rogueYun16x16()

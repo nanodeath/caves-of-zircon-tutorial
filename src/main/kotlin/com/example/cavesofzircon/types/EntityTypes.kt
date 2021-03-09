@@ -45,3 +45,5 @@ object Club : BaseEntityType(
 object Jacket : BaseEntityType(
     name = "Leather jacket",
     description = "Dirty and rugged jacket made of leather."), Armor
+
+object Zombie : BaseEntityType(name = "zombie"), Combatant, ItemHolder

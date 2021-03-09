@@ -3,6 +3,7 @@ package com.example.cavesofzircon.builders
 import com.example.cavesofzircon.GameConfig
 import com.example.cavesofzircon.GameConfig.ARMOR_PER_LEVEL
 import com.example.cavesofzircon.GameConfig.WEAPONS_PER_LEVEL
+import com.example.cavesofzircon.GameConfig.ZOMBIES_PER_LEVEL
 import com.example.cavesofzircon.extensions.GameEntity
 import com.example.cavesofzircon.extensions.position
 import com.example.cavesofzircon.types.FogOfWar
@@ -34,6 +35,7 @@ class GameBuilder(val worldSize: Size3D, private val random: Random) {
         addZircons()
         addWeapons()
         addArmor()
+        addZombies()
         println("Adding player at ${player.position}")
         val game = Game.create(player, world)
         world.addWorldEntity(FogOfWar(game))
@@ -87,6 +89,14 @@ class GameBuilder(val worldSize: Size3D, private val random: Random) {
         repeat(world.actualSize.zLength) { level ->
             repeat(ARMOR_PER_LEVEL) {
                 EntityFactory.newRandomArmor(random).addToWorld(level)
+            }
+        }
+    }
+
+    private fun addZombies() = also {
+        repeat(world.actualSize.zLength) { level ->
+            repeat(ZOMBIES_PER_LEVEL) {
+                EntityFactory.newZombie(random).addToWorld(level)
             }
         }
     }

@@ -2,10 +2,7 @@ package com.example.cavesofzircon.world
 
 import com.example.cavesofzircon.attributes.Vision
 import com.example.cavesofzircon.blocks.GameBlock
-import com.example.cavesofzircon.extensions.AnyGameEntity
-import com.example.cavesofzircon.extensions.GameEntity
-import com.example.cavesofzircon.extensions.blocksVision
-import com.example.cavesofzircon.extensions.position
+import com.example.cavesofzircon.extensions.*
 import kotlinx.coroutines.Job
 import org.hexworks.amethyst.api.Engine
 import org.hexworks.amethyst.api.entity.Entity
@@ -21,6 +18,7 @@ import org.hexworks.zircon.api.screen.Screen
 import org.hexworks.zircon.api.shape.EllipseFactory
 import org.hexworks.zircon.api.shape.LineFactory
 import org.hexworks.zircon.api.uievent.UIEvent
+import kotlin.math.abs
 import kotlin.random.Random
 
 class World(
@@ -134,5 +132,22 @@ class World(
         val current = blocks[position] ?: return
         current.reveal()
     }
+
+    fun canSee(looker: AnyGameEntity, target: AnyGameEntity): List<Position>? {
+        val radius = looker.requiredAttribute<Vision>().radius
+        val level = looker.position.z
+        if (looker.position.isWithinRangeOf(target.position, radius)) {
+            val path = LineFactory.buildLine(looker.position.to2DPosition(), target.position.to2DPosition())
+            if (path.none { isVisionBlockedAt(it.toPosition3D(level)) }) {
+                return path.positions.toList().drop(1)
+            }
+        }
+        return null
+    }
+
     private fun randomInt(int: Int) = if (int == 0) 0 else random.nextInt(int)
+}
+
+private fun Position3D.isWithinRangeOf(other: Position3D, radius: Int): Boolean {
+    return !isUnknown && !other.isUnknown && this.z == other.z && abs(x - other.x) + abs(y - other.y) <= radius
 }
