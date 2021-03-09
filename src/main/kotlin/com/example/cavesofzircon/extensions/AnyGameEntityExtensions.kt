@@ -36,7 +36,7 @@ fun <T : Attribute> AnyGameEntity.requiredAttribute(klass: KClass<T>): T {
 
 inline fun <reified T : Attribute> AnyGameEntity.optionalAttribute(): T? = findAttributeOrNull(T::class)
 
-val AnyGameEntity.occupiesBlock get() = findAttributeOrNull(BlockOccupier::class) != null
+val AnyGameEntity.occupiesBlock get() = optionalAttribute<BlockOccupier>() != null
 
 suspend fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity): Response {
     findAttributeOrNull(EntityActions::class)?.let { ea ->
