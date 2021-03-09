@@ -4,6 +4,7 @@ import com.example.cavesofzircon.GameConfig
 import com.example.cavesofzircon.builders.GameBuilder
 import com.example.cavesofzircon.builders.GameTileRepository
 import com.example.cavesofzircon.events.GameLogEvent
+import com.example.cavesofzircon.view.fragment.PlayerStatsFragment
 import com.example.cavesofzircon.world.Game
 import org.hexworks.cobalt.databinding.api.extension.toProperty
 import org.hexworks.cobalt.events.api.KeepSubscription
@@ -31,7 +32,13 @@ class PlayView(
             .withSize(GameConfig.SIDEBAR_WIDTH, GameConfig.WINDOW_HEIGHT)
             .withDecorations(box())
             .build()
-            .let { screen.addComponent(it) }
+            .let { sidebar ->
+                screen.addComponent(sidebar)
+                sidebar.addFragment(PlayerStatsFragment(
+                    width = sidebar.contentSize.width,
+                    player = game.player
+                ))
+            }
 
         Components.logArea()
             .withDecorations(box(title = "Log"))
@@ -70,4 +77,3 @@ class PlayView(
         }
     }
 }
-
