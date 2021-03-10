@@ -11,6 +11,7 @@ import com.example.cavesofzircon.extensions.takeIfType
 import com.example.cavesofzircon.types.EquipmentHolder
 import com.example.cavesofzircon.types.equip
 import com.example.cavesofzircon.types.inventory
+import com.example.cavesofzircon.view.dialog.ExamineDialog
 import com.example.cavesofzircon.view.fragment.InventoryFragment
 import com.example.cavesofzircon.world.GameContext
 import kotlinx.coroutines.runBlocking
@@ -27,7 +28,7 @@ import org.hexworks.zircon.api.uievent.Processed
 import org.hexworks.zircon.internal.component.modal.EmptyModalResult
 
 object InventoryInspector : BaseFacet<GameContext, InspectInventory>(InspectInventory::class) {
-    val DIALOG_SIZE = Size.create(33, 15)
+    val DIALOG_SIZE = Size.create(43, 15)
 
     override suspend fun receive(message: InspectInventory): Response {
         val (context, itemHolder) = message
@@ -57,6 +58,10 @@ object InventoryInspector : BaseFacet<GameContext, InspectInventory>(InspectInve
                 if (equipmentHolder != null && combatItem != null) equipmentHolder.equip(itemHolder.inventory, combatItem) else null
             }
 
+        }, onExamine = { item ->
+            runBlocking {
+                screen.openModal(ExamineDialog(screen, item))
+            }
         })
         panel.addFragment(fragment)
 

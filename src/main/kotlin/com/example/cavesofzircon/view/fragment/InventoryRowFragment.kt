@@ -29,6 +29,11 @@ class InventoryRowFragment(width: Int, item: GameItem) : Fragment {
         .withDecorations()
         .build()
 
+    val examineButton = Components.button()
+        .withText("Examine")
+        .withDecorations()
+        .build()
+
     override val root: Component = Components.hbox()
         .withSpacing(1)
         .withSize(width, 1)
@@ -42,6 +47,7 @@ class InventoryRowFragment(width: Int, item: GameItem) : Fragment {
             item.takeIfType<CombatItem>()?.run {
                 addComponent(equipButton)
             }
+            addComponent(examineButton)
         }
 }
 
@@ -50,7 +56,8 @@ class InventoryFragment(
     width: Int,
     private val onDrop: (GameItem) -> Unit,
     private val onEat: (GameItem) -> Unit,
-    private val onEquip: (GameItem) -> GameItem?
+    private val onEquip: (GameItem) -> GameItem?,
+    private val onExamine: (GameItem) -> Unit
 ) : Fragment {
     override val root: Component = Components.vbox()
         .withSize(width, inventory.size + 1)
@@ -92,6 +99,10 @@ class InventoryFragment(
                     attachedComponent.detach()
                     addRow(width, oldItem)
                 }
+                Processed
+            }
+            examineButton.onActivated {
+                onExamine(item)
                 Processed
             }
         }

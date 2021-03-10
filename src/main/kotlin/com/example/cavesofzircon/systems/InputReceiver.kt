@@ -8,11 +8,13 @@ import com.example.cavesofzircon.extensions.GameEntity
 import com.example.cavesofzircon.extensions.position
 import com.example.cavesofzircon.messages.MoveTo
 import com.example.cavesofzircon.types.Player
+import com.example.cavesofzircon.view.dialog.HelpDialog
 import com.example.cavesofzircon.world.GameContext
 import org.hexworks.amethyst.api.base.BaseBehavior
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.Position3D
+import org.hexworks.zircon.api.screen.Screen
 import org.hexworks.zircon.api.uievent.KeyCode
 import org.hexworks.zircon.api.uievent.KeyboardEvent
 
@@ -30,11 +32,13 @@ object InputReceiver : BaseBehavior<GameContext>() {
                 KeyCode.KEY_F -> player.moveDown(context)
                 KeyCode.KEY_P -> player.pickItemUp(context)
                 KeyCode.KEY_I -> player.inspectInventory(context)
+                KeyCode.F1 -> showHelp(context.screen)
                 else -> false // currentPos
             }
         }
         return false
     }
+
 }
 
 private suspend fun GameEntity<Player>.pickItemUp(context: GameContext): Boolean {
@@ -59,5 +63,10 @@ private suspend fun GameEntity<Player>.moveUp(context: GameContext): Boolean {
 
 private suspend fun GameEntity<Player>.moveDown(context: GameContext): Boolean {
     receiveMessage(MoveDown(context, this, this))
+    return true
+}
+
+private fun showHelp(screen: Screen): Boolean {
+    screen.openModal(HelpDialog(screen))
     return true
 }

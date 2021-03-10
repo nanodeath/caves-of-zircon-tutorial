@@ -1,5 +1,6 @@
 package com.example.cavesofzircon.view.dialog
 
+import com.example.cavesofzircon.GameConfig
 import org.hexworks.zircon.api.builder.component.ModalBuilder
 import org.hexworks.zircon.api.component.Container
 import org.hexworks.zircon.api.component.modal.ModalFragment
@@ -14,6 +15,7 @@ abstract class Dialog(
 
     final override val root by lazy {
         ModalBuilder.newBuilder<EmptyModalResult>()
+            .withColorTheme(GameConfig.THEME)
             .withComponent(container)
             .withParentSize(screen.size)
             .withCenteredDialog(true)
