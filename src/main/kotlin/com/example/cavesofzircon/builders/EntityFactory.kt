@@ -40,7 +40,8 @@ object EntityFactory {
             Vision(9),
             Inventory(10),
             EnergyLevel(1000, 1000),
-            Equipment(newClub(), newJacket())
+            Equipment(newClub(), newJacket()),
+            Experience()
         )
         behaviors(InputReceiver, EnergyExpender)
         facets(
@@ -54,7 +55,8 @@ object EntityFactory {
             InventoryInspector,
             ItemDropper,
             EnergyExpender,
-            DigestiveSystem
+            DigestiveSystem,
+            ExperienceAccumulator
         )
     }
 
