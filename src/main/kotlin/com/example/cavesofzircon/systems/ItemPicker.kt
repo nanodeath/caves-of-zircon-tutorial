@@ -27,6 +27,6 @@ object ItemPicker : BaseFacet<GameContext, PickItemUp>(PickItemUp::class) {
     }
 }
 
-private fun World.findTopItem(position: Position3D): GameEntity<Item>? {
+fun World.findTopItem(position: Position3D): GameEntity<Item>? {
     return fetchBlockAtOrNull(position)?.entities?.filterType<Item>()?.firstOrNull()
 }

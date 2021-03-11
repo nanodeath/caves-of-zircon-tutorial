@@ -4,11 +4,14 @@ import com.example.cavesofzircon.GameConfig
 import com.example.cavesofzircon.builders.GameBuilder
 import com.example.cavesofzircon.builders.GameTileRepository
 import com.example.cavesofzircon.events.GameLogEvent
+import com.example.cavesofzircon.events.PlayerDied
 import com.example.cavesofzircon.events.PlayerGainedLevel
+import com.example.cavesofzircon.events.PlayerWonTheGame
 import com.example.cavesofzircon.view.dialog.LevelUpDialog
 import com.example.cavesofzircon.view.fragment.PlayerStatsFragment
 import com.example.cavesofzircon.world.Game
 import org.hexworks.cobalt.databinding.api.extension.toProperty
+import org.hexworks.cobalt.events.api.DisposeSubscription
 import org.hexworks.cobalt.events.api.KeepSubscription
 import org.hexworks.cobalt.events.api.subscribeTo
 import org.hexworks.zircon.api.ComponentDecorations.box
@@ -83,6 +86,14 @@ class PlayView(
         Zircon.eventBus.subscribeTo<PlayerGainedLevel> {
             screen.openModal(LevelUpDialog(screen, game.player))
             KeepSubscription
+        }
+        Zircon.eventBus.subscribeTo<PlayerWonTheGame> {
+            replaceWith(WinView(grid, it.zircons))
+            DisposeSubscription
+        }
+        Zircon.eventBus.subscribeTo<PlayerDied> {
+            replaceWith(LoseView(grid, it.cause))
+            DisposeSubscription
         }
     }
 }

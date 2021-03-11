@@ -4,6 +4,7 @@ import com.example.cavesofzircon.GameConfig
 import com.example.cavesofzircon.GameConfig.ARMOR_PER_LEVEL
 import com.example.cavesofzircon.GameConfig.WEAPONS_PER_LEVEL
 import com.example.cavesofzircon.GameConfig.ZOMBIES_PER_LEVEL
+import com.example.cavesofzircon.events.logGameEvent
 import com.example.cavesofzircon.extensions.GameEntity
 import com.example.cavesofzircon.extensions.position
 import com.example.cavesofzircon.types.FogOfWar
@@ -36,6 +37,7 @@ class GameBuilder(val worldSize: Size3D, private val random: Random) {
         addWeapons()
         addArmor()
         addZombies()
+        addExit()
         println("Adding player at ${player.position}")
         val game = Game.create(player, world)
         world.addWorldEntity(FogOfWar(game))
@@ -97,6 +99,15 @@ class GameBuilder(val worldSize: Size3D, private val random: Random) {
         repeat(world.actualSize.zLength) { level ->
             repeat(ZOMBIES_PER_LEVEL) {
                 EntityFactory.newZombie(random).addToWorld(level)
+            }
+        }
+    }
+
+    private fun addExit() {
+        repeat(world.actualSize.zLength) { level ->
+            EntityFactory.newExit().addToWorld(level).also {
+                logGameEvent("Exit created at ${it.position}", it)
+                System.err.println("Exit created at ${it.position}")
             }
         }
     }

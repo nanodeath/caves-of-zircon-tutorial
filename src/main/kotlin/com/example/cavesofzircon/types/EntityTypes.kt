@@ -47,3 +47,5 @@ object Jacket : BaseEntityType(
     description = "Dirty and rugged jacket made of leather."), Armor
 
 object Zombie : BaseEntityType(name = "zombie"), Combatant, ItemHolder
+
+object Exit : BaseEntityType(name = "exit")

@@ -41,10 +41,12 @@ object EntityFactory {
             Inventory(10),
             EnergyLevel(1000, 1000),
             Equipment(newClub(), newJacket()),
-            Experience()
+            Experience(),
+            ZirconCounter()
         )
         behaviors(InputReceiver, EnergyExpender)
         facets(
+            ZirconGatherer,
             Movable,
             CameraMover,
             StairClimber,
@@ -298,5 +300,12 @@ object EntityFactory {
         )
         facets(Movable, Attackable, ItemDropper, LootDropper, Destructible)
         behaviors(HunterSeeker or Wanderer)
+    }
+
+    fun newExit() = newGameEntityOfType(Exit) {
+        attributes(
+            EntityTile(GameTileRepository.EXIT),
+            EntityPosition()
+        )
     }
 }
